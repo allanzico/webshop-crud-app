@@ -1,1 +1,1 @@
-student_registration
+Stock adding app to show the basic CRUD functionality
