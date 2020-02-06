@@ -3,14 +3,16 @@
 namespace App\Entity;
 
 use DateTime;
-use Exception;
-use Gedmo\Mapping\Annotation as Gedmo;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Exception;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\ProductRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\CategoryRepository")
  */
-class Product
+class Category
 {
     /**
      * @ORM\Id()
@@ -39,15 +41,14 @@ class Product
     private $updatedAt;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\OneToMany(targetEntity="App\Entity\Product", mappedBy="category")
      */
-    private $quantity;
+    private $products;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Category", inversedBy="products")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $category;
+    public function __construct()
+    {
+        $this->products = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -66,18 +67,6 @@ class Product
         return $this;
     }
 
-    public function getQuantity(): ?int
-    {
-        return $this->quantity;
-    }
-
-    public function setQuantity(int $quantity): self
-    {
-        $this->quantity = $quantity;
-
-        return $this;
-    }
-
     /**
      * @return DateTime
      */
@@ -89,7 +78,7 @@ class Product
     /**
      * @throws Exception
      */
-    public function setCreatedAt()
+    public function setCreatedAt(): void
     {
         $this->createdAt = new  \DateTime();
     }
@@ -105,20 +94,43 @@ class Product
     /**
      * @throws Exception
      */
-    public function setUpdatedAt()
+    public function setUpdatedAt(): void
     {
         $this->updatedAt = new  \DateTime();
     }
 
-    public function getCategory(): ?Category
+    /**
+     * @return Collection|Product[]
+     */
+    public function getProducts(): Collection
     {
-        return $this->category;
+        return $this->products;
     }
 
-    public function setCategory(?Category $category): self
+    public function addProduct(Product $product): self
     {
-        $this->category = $category;
+        if (!$this->products->contains($product)) {
+            $this->products[] = $product;
+            $product->setCategory($this);
+        }
 
         return $this;
+    }
+
+    public function removeProduct(Product $product): self
+    {
+        if ($this->products->contains($product)) {
+            $this->products->removeElement($product);
+            // set the owning side to null (unless already changed)
+            if ($product->getCategory() === $this) {
+                $product->setCategory(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function _toString(){
+        return $this->getName();
     }
 }

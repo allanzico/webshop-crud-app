@@ -1,0 +1,41 @@
+{% extends 'body_base.html.twig' %}
+
+{% block content_body %}
+    <a href="{{ path('new_category') }}" class="btn btn-primary pull-right">
+        Add New Category <span class="fa fa-plus-circle"></span>
+    </a>
+    <h1>Categories</h1>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Manage</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for category in categories %}
+
+            <tr>
+
+                    <td>{{ category.name}}</td>
+                    <td> <a href="{{ path('edit_category', {
+                            id: category.id
+                        }) }}">
+                            <span class="fa fa-pencil"></span>
+                        </a>
+
+                        |
+                        <a href="{{ path('delete_category', {
+                            id: category.id
+                        }) }}">
+                            <span class="fa fa-times" style="color: red"></span>
+                        </a>
+
+                    </td>
+
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

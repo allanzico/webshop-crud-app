@@ -33,6 +33,16 @@ class ProductRepository extends ServiceEntityRepository
         ;
     }
 
+    public function findAllJoinCategory(){
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.name IS NOT NULL')
+
+            ->orderBy('p.createdAt', 'DESC')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
 
 
     /*

@@ -19,11 +19,6 @@ class ProductController extends AbstractController
      */
     public function index(EntityManagerInterface $entityManager)
     {
-       return $this->show($entityManager);
-    }
-
-
-    public function show(EntityManagerInterface $entityManager){
 
         $repository = $entityManager->getRepository(Product::class);
         $products = $repository->findAllByNewest();
@@ -32,7 +27,19 @@ class ProductController extends AbstractController
             'products' =>$products,
 
         ]);
+    }
 
+    /**
+     * @Route("/product/show", name="show_product")
+     * @param EntityManagerInterface $entityManager
+     * @param Product $product
+     * @return Response
+     */
+
+    public function show(EntityManagerInterface $entityManager, Product $product){
+        return $this->render('article/show.html.twig', [
+            'product'=> $product,
+        ]);
     }
 
     /**
@@ -89,6 +96,23 @@ class ProductController extends AbstractController
         return  $this->render('product/edit.html.twig' ,[
             'productForm' => $form->createView(),
         ]);
+    }
+
+    /**
+     * @Route("/product/{id}", name="delete_product")
+     * @param $id
+     * @return RedirectResponse
+     */
+
+    public function delete($id){
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $product = $entityManager->getRepository(Product::class)->find($id);
+            $entityManager->remove($product);
+            $entityManager->flush();
+
+        return  $this->redirectToRoute('homepage',['id'=>$product->getId()]);
+
     }
 
 }
