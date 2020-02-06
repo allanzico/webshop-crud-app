@@ -22,6 +22,7 @@ class ProductController extends AbstractController
 
         $repository = $entityManager->getRepository(Product::class);
         $products = $repository->findAllByNewest();
+       
 
         return $this->render('product/index.html.twig',[
             'products' =>$products,
