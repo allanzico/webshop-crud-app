@@ -3,8 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\Product;
+use App\Repository\CategoryRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
+use Gedmo\Sluggable\Util\Urlizer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,7 +26,6 @@ class ProductController extends AbstractController
 
         $repository = $entityManager->getRepository(Product::class);
         $products = $repository->findAllByNewest();
-       
 
         return $this->render('product/index.html.twig',[
             'products' =>$products,
@@ -48,16 +51,33 @@ class ProductController extends AbstractController
      * @param EntityManagerInterface $entityManager
      * @param Request $request
      * @return Response
+     * @throws Exception
      */
 
     //Add new product to the database
-    public function new(EntityManagerInterface $entityManager, Request $request){
+    public function new(EntityManagerInterface $entityManager, Request $request ){
+
+        $product = new Product();
+
+
 
         //Create and Render form
-        $form = $this->createForm(\ProductFormType::class);
+        $form = $this->createForm(\ProductFormType::class, $product);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()){
-            $product = $form->getData();
+            $file = $form->get('imageFilename')->getData();
+            $destination = $this->getParameter('uploads_directory');
+            $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+            $newFilename = Urlizer::urlize($originalFilename).'-'.uniqid().'-'.$file->guessExtension();
+
+            //Move file to folder
+            $file->move(
+              $destination,
+                $newFilename
+            );
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $product->setImageFilename($newFilename);
             $product->setCreatedAt();
             $product->setUpdatedAt();
             $entityManager->persist($product);
@@ -98,6 +118,7 @@ class ProductController extends AbstractController
             'productForm' => $form->createView(),
         ]);
     }
+
 
     /**
      * @Route("/product/{id}", name="delete_product")

@@ -9,6 +9,7 @@
     <table class="table">
         <thead>
         <tr>
+            <th></th>
             <th>Name</th>
             <th>Quantity</th>
             <th>Category</th>
@@ -19,11 +20,11 @@
         {% for product in products %}
 
             <tr>
-
+                <td><img src="{{ asset(product.imagePath) }}"  class="img-thumbnail" height="100" width="100" ></td>
                 <td>{{ product.name}}</td>
                 <td>{{ product.quantity}}</td>
 
-                    <td></td>
+                    <td>{{ product.category.name }}</td>
 
 
                 <td>
