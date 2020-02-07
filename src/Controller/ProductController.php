@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Product;
 use App\Repository\CategoryRepository;
+use App\Service\UploaderHelper;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Gedmo\Sluggable\Util\Urlizer;
@@ -55,7 +56,7 @@ class ProductController extends AbstractController
      */
 
     //Add new product to the database
-    public function new(EntityManagerInterface $entityManager, Request $request ){
+    public function new(EntityManagerInterface $entityManager, Request $request, UploaderHelper $uploaderHelper ){
 
         $product = new Product();
 
@@ -65,16 +66,8 @@ class ProductController extends AbstractController
         $form = $this->createForm(\ProductFormType::class, $product);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()){
-            $file = $form->get('imageFilename')->getData();
-            $destination = $this->getParameter('uploads_directory');
-            $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-            $newFilename = Urlizer::urlize($originalFilename).'-'.uniqid().'-'.$file->guessExtension();
-
-            //Move file to folder
-            $file->move(
-              $destination,
-                $newFilename
-            );
+            $uploadedFile = $form->get('imageFilename')->getData();
+            $newFilename = $uploaderHelper->uploadImage($uploadedFile);
 
             $entityManager = $this->getDoctrine()->getManager();
             $product->setImageFilename($newFilename);
@@ -99,14 +92,18 @@ class ProductController extends AbstractController
      * @param EntityManagerInterface $entityManager
      * @return RedirectResponse
      */
-    public function edit(Product $product, Request $request, EntityManagerInterface $entityManager){
+    public function edit(Product $product, Request $request, EntityManagerInterface $entityManager, UploaderHelper $uploaderHelper){
 
         //Return Edit form
         $form = $this->createForm(\ProductFormType::class, $product);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()){
             $product = $form->getData();
+            $uploadedFile = $form->get('imageFilename')->getData();
+            $newFilename = $uploaderHelper->uploadImage($uploadedFile);
+
             $product->setUpdatedAt();
+            $product->setImageFilename($newFilename);
             $entityManager->persist($product);
             $entityManager->flush();
 
