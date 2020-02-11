@@ -11,6 +11,7 @@ use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Image;
 
 class ProductFormType extends AbstractType
 {
@@ -25,7 +26,13 @@ class ProductFormType extends AbstractType
             ])
             ->add('imageFilename', FileType::class, [
                 'mapped' => false,
-                'label' => 'Upload Image'
+                'required' =>false,
+                'label' => 'Upload Image',
+                'constraints' =>[
+                    new  Image([
+                        'maxSize'=> '2M'
+                    ])
+                ]
             ]);
     }
 

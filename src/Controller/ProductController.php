@@ -67,10 +67,14 @@ class ProductController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()){
             $uploadedFile = $form->get('imageFilename')->getData();
-            $newFilename = $uploaderHelper->uploadImage($uploadedFile);
 
-            $entityManager = $this->getDoctrine()->getManager();
-            $product->setImageFilename($newFilename);
+            if ($uploadedFile){
+                $newFilename = $uploaderHelper->uploadImage($uploadedFile);
+
+                $entityManager = $this->getDoctrine()->getManager();
+                $product->setImageFilename($newFilename);
+
+            }
             $product->setCreatedAt();
             $product->setUpdatedAt();
             $entityManager->persist($product);
@@ -100,10 +104,14 @@ class ProductController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()){
             $product = $form->getData();
             $uploadedFile = $form->get('imageFilename')->getData();
-            $newFilename = $uploaderHelper->uploadImage($uploadedFile);
+            if ($uploadedFile){
+                $newFilename = $uploaderHelper->uploadImage($uploadedFile);
+
+                $entityManager = $this->getDoctrine()->getManager();
+                $product->setImageFilename($newFilename);
+            }
 
             $product->setUpdatedAt();
-            $product->setImageFilename($newFilename);
             $entityManager->persist($product);
             $entityManager->flush();
 

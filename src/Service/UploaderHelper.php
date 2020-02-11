@@ -18,18 +18,18 @@ class UploaderHelper
     public function uploadImage(UploadedFile $uploadedFile) : string
     {
 
-        $destination = $this->uploadsPath;
+            $destination = $this->uploadsPath;
 
-        $originalFilename = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
-        $newFilename = Urlizer::urlize($originalFilename).'-'.uniqid().'-'.$uploadedFile->guessExtension();
+            $originalFilename = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
+            $newFilename = Urlizer::urlize($originalFilename).'-'.uniqid().'-'.$uploadedFile->guessExtension();
 
-        //Move file to folder
-        $uploadedFile->move(
-            $destination,
-            $newFilename
-        );
+            //Move file to folder
+            $uploadedFile->move(
+                $destination,
+                $newFilename
+            );
 
-        return $newFilename;
+            return $newFilename;
 
     }
 }

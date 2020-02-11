@@ -20,7 +20,13 @@
         {% for product in products %}
 
             <tr>
-                <td><img src="{{ asset(product.imagePath) }}"  class="img-thumbnail" height="100" width="100" ></td>
+                <td>
+                {% if product.imageFilename == null %}
+                        No Image to display
+                {% else %}
+                    <img src="{{ asset(product.imagePath) }}"  class="img-thumbnail" height="100" width="100" >
+                {% endif %}
+                </td>
                 <td>{{ product.name}}</td>
                 <td>{{ product.quantity}}</td>
 
