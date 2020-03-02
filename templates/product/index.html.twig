@@ -1,9 +1,11 @@
 {% extends 'body_base.html.twig' %}
 
 {% block content_body %}
+    {% if is_granted('ROLE_USER') %}
     <a href="{{ path('new_product') }}" class="btn btn-primary pull-right">
         Add New Product <span class="fa fa-plus-circle"></span>
     </a>
+    {% endif %}
     <h1>Products</h1>
 
     <table class="table">
@@ -13,7 +15,9 @@
             <th>Name</th>
             <th>Quantity</th>
             <th>Category</th>
+            {% if is_granted('ROLE_ADMIN') %}
             <th>Manage</th>
+            {% endif %}
         </tr>
         </thead>
         <tbody>
@@ -32,7 +36,7 @@
 
                     <td>{{ product.category.name }}</td>
 
-
+                {% if is_granted('ROLE_ADMIN') %}
                 <td>
                     <a href="{{ path('edit_product', {
                         id: product.id
@@ -48,6 +52,7 @@
                     </a>
 
                 </td>
+                {% endif %}
             </tr>
         {% endfor %}
         </tbody>

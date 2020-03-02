@@ -26,10 +26,23 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{{ path('category') }}">Categories</a>
                 </li>
+
+                {% if is_granted('ROLE_USER') %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ path('app_login') }}">Login</a>
+                    <a class="nav-link" href="{{ path('app_account') }}">Profile</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('app_logout') }}">Logout</a>
                 </li>
 
+                {% else %}
+                    <li class="nav-item">
+                        <a style="color: #fff;" class="nav-link" href="{{ path('app_login') }}">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a style="color: #fff;" class="nav-link" href="{{ path('app_register') }}">Register</a>
+                    </li>
+                {% endif %}
 
             </ul>
 

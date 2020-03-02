@@ -5,21 +5,29 @@ namespace App\Controller;
 use App\Entity\Category;
 use App\Forms\CategoryFormType;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+
+/**
+ * @IsGranted("ROLE_ADMIN")
+ */
+
+
 class CategoryController extends AbstractController
 {
     /**
-     * @Route("/category", name="category")
+     * @Route("/admin/category", name="category")
      * @param EntityManagerInterface $entityManager
      * @return Response
      */
     public function index(EntityManagerInterface $entityManager)
     {
+
         $repository = $entityManager->getRepository(Category::class);
         $categories = $repository->findAllByNewest();
 
@@ -31,7 +39,7 @@ class CategoryController extends AbstractController
 
 
     /**
-     * @Route("/category/new", name="new_category")
+     * @Route("/admin/category/new", name="new_category")
      * @param EntityManagerInterface $entityManager
      * @param Request $request
      * @return RedirectResponse|Response
@@ -59,7 +67,7 @@ class CategoryController extends AbstractController
     }
 
     /**
-     * @Route("/category/{id}edit", name="edit_category")
+     * @Route("/admin/category/{id}edit", name="edit_category")
      * @param Category $category
      * @param Request $request
      * @param EntityManagerInterface $entityManager
@@ -86,7 +94,7 @@ class CategoryController extends AbstractController
     }
 
     /**
-     * @Route("/category/{id}", name="delete_category")
+     * @Route("/admin/category/{id}", name="delete_category")
      * @param $id
      * @return RedirectResponse
      */

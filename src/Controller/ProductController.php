@@ -96,7 +96,7 @@ class ProductController extends AbstractController
         $this->entityManager->persist($product);
         $this->entityManager->flush();
 
-       return new JsonResponse(['text' => 'Successfully added product :)']);
+
 
 
 //        //Create and Render form
@@ -127,6 +127,7 @@ class ProductController extends AbstractController
      */
     public function edit(Product $product, Request $request, EntityManagerInterface $entityManager, UploaderHelper $uploaderHelper){
 
+        $this->denyAccessUnlessGranted ('ROLE_USER');
         //Return Edit form
         $form = $this->createForm(\ProductFormType::class, $product);
         $form->handleRequest($request);
@@ -160,7 +161,7 @@ class ProductController extends AbstractController
      */
 
     public function delete($id){
-
+        $this->denyAccessUnlessGranted ('ROLE_USER');
             $entityManager = $this->getDoctrine()->getManager();
             $product = $entityManager->getRepository(Product::class)->find($id);
             $entityManager->remove($product);
