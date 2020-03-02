@@ -23,7 +23,7 @@ class CategoryController extends AbstractController
         $repository = $entityManager->getRepository(Category::class);
         $categories = $repository->findAllByNewest();
 
-        return $this->render('category/login.html.twig',[
+        return $this->render('category/index.html.twig',[
             'categories' =>$categories,
 
         ]);

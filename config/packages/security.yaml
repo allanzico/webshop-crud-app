@@ -1,5 +1,8 @@
 security:
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
+    encoders:
+        App\Entity\User:
+            algorithm: bcrypt
     providers:
         # used to reload user from session & other features (e.g. switch_user)
         app_user_provider:
@@ -19,6 +22,9 @@ security:
                 path: app_logout
                 # where to redirect after logout
                 # target: app_any_route
+            remember_me:
+                secret: '%kernel.secret%'
+                lifetime: 2592000
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication

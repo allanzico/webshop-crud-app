@@ -54,7 +54,7 @@ class ProductController extends AbstractController
 
 
         //return new JsonResponse($response);
-        return $this->render('product/login.html.twig',[
+        return $this->render('product/index.html.twig',[
             'products' =>$response,
 
         ]);
