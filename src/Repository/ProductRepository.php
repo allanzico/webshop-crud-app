@@ -33,11 +33,6 @@ class ProductRepository extends ServiceEntityRepository
         ;
     }
 
-    public function findAllJoinCategory(){
-
-    }
-
-
 
     /*
     public function findOneBySomeField($value): ?Product

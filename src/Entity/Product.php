@@ -97,6 +97,8 @@ class Product
     public function setCreatedAt()
     {
         $this->createdAt = new  \DateTime();
+
+        return $this;
     }
 
     /**
@@ -113,6 +115,7 @@ class Product
     public function setUpdatedAt()
     {
         $this->updatedAt = new  \DateTime();
+        return $this;
     }
 
     public function getCategory(): ?Category
@@ -141,5 +144,24 @@ class Product
         $this->imageFilename = $imageFilename;
 
         return $this;
+    }
+
+    public function toArray()
+    {
+        return [
+            'id' => $this->getId(),
+            'name' => $this->getName(),
+            'quantity' => $this->getQuantity(),
+            'created_at' => $this->getCreatedAt(),
+            'updated_at' => $this->getUpdatedAt(),
+            'imagePath' => $this->getImagePath(),
+            'imageFilename' => $this->getImageFilename(),
+            'category' => [
+                'id' => $this->category->getId(),
+                'name' => $this->category->getName(),
+                'createdAt' => $this->category->getCreatedAt(),
+                'updatedAt' => $this->category->getUpdatedAt(),
+            ]
+        ];
     }
 }

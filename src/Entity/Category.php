@@ -133,4 +133,15 @@ class Category
     public function _toString(){
         return $this->getName();
     }
+
+    public function toArray()
+    {
+        return [
+            'id' => $this->getId(),
+            'name' => $this->getName(),
+            'createdAt' => $this->getCreatedAt(),
+            'updatedAt' => $this->getUpdatedAt(),
+            'products' => $this->getProducts()
+        ];
+    }
 }
