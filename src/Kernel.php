@@ -51,4 +51,20 @@ class Kernel extends BaseKernel
         $routes->import($confDir.'/{routes}/*'.self::CONFIG_EXTS, '/', 'glob');
         $routes->import($confDir.'/{routes}'.self::CONFIG_EXTS, '/', 'glob');
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getName()
+    {
+        // TODO: Implement getName() method.
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getRootDir()
+    {
+        // TODO: Implement getRootDir() method.
+    }
 }

@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\ApiToken;
 use App\Entity\User;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoder;
@@ -26,7 +27,7 @@ class UserFixture extends BaseFixture
 
     protected function loadData(ObjectManager $entityManager)
     {
-        $this->createMany(10, 'main_users', function ($i){
+        $this->createMany(10, 'main_users', function ($i) use ($entityManager){
             $user = new User();
             $user->setEmail(sprintf('allan%d@example.com', $i));
             $user->setName($this->faker->name);
@@ -37,6 +38,11 @@ class UserFixture extends BaseFixture
                 $user,
                 'test1234567'
             ));
+
+            $apiToken1 = new ApiToken($user);
+            $apiToken2 = new ApiToken($user);
+            $entityManager->persist($apiToken1);
+            $entityManager->persist($apiToken2);
 
             return $user;
         });
