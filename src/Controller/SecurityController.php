@@ -2,8 +2,13 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
+use App\Security\LoginFormAuthenticator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class SecurityController extends AbstractController
@@ -44,5 +49,33 @@ class SecurityController extends AbstractController
     public function logout()
     {
         throw  new \Exception();
+    }
+
+    /**
+     * @Route("/register", name="app_register")
+     */
+    public function signup(Request $request, UserPasswordEncoderInterface $passwordEncoder, GuardAuthenticatorHandler $guardAuthenticatorHandler, LoginFormAuthenticator $loginFormAuthenticator)
+    {
+        if ($request->isMethod('POST')) {
+            $user = new  User();
+            $user->setEmail($request->request->get('email'));
+            $user->setName('Guy');
+            $user->setPassword($passwordEncoder->encodePassword(
+                $user,
+                $request->request->get('password')
+            ));
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($user);
+            $entityManager->flush();
+
+            return $guardAuthenticatorHandler->authenticateUserAndHandleSuccess(
+                $user,
+                $request,
+                $loginFormAuthenticator,
+                'main'
+            );
+        }
+        return $this->render('security/register.html.twig');
     }
 }
